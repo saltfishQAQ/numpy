@@ -1,0 +1,70 @@
+import numpy as np
+arr=np.zeros(7)
+arr[1]='1'
+np.save("a01.npy",arr)
+
+
+import numpy as np
+arr=np.arange(11,51,1)
+np.save("a02.npy",arr)
+print(arr)
+
+
+'''讀入a02.npy，利用索引值把以上數組反轉，print(arr1)以下所示，把結果保存為a03.npy。提示利用索引 ::-1'''
+import numpy as np
+from numpy.linalg import inv
+arr = np.load('a02.npy')
+arr1= arr[::-1]
+print(arr1)
+np.save("a03.npy",arr1)
+
+
+'''利用linspace創建一個數組，最小值的元素為0，最大值元素為100，一共有16個元素，把結果保存為a04.npy。'''
+import numpy as np
+arr = np.linspace(0,100,num=16)
+print(arr)
+np.save("a04.npy",arr)
+
+
+'''使用np.random.random創建一個5*10的ndarray對象，幷打印出最大最小元素。打印出每一行的平均值。打印出每一列的加總結果sum。'''
+import numpy as np
+arr = np.random.random((5,10))
+print(arr.sum(axis=0))
+print((arr.mean(axis=1)))
+print(arr.max())
+print(arr.min())
+
+
+'''創建一個5*5的ndarray對象，且矩陣邊界全爲1，裏面全爲0。如下所示，並把結果保存為a06.npy'''
+import numpy as np
+arr = np.ones((5,5))
+arr[1:4,1:4]='0'
+print(arr)
+np.save("a06.npy",arr)
+
+
+'''創建一個每一行都是從0到49的100*50矩陣。
+，把結果保存為a07.npy。'''
+import numpy as np
+lis = []
+for i in range(50):
+    lis.append(i)
+arr=np.zeros((100,50))
+arr[:]=lis
+np.save("a07.npy",arr)
+print(arr)
+
+
+'''創建一個範圍在(0,np.pi)之間的長度爲8的等差數列，把結果保存為a08.npy'''
+import numpy as np
+arr = np.linspace(0,np.pi,endpoint=True,num=8)
+print(arr)
+np.save("a08.npy",arr)
+
+
+'''用np.random.random創建一個長度爲20的隨機數組幷排序，把結果保存為a09.npy。'''
+import numpy as np
+arr = np.random.random(20)
+arr.sort()
+print(arr)
+np.save('a09.npy',arr)
