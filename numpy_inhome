@@ -1,0 +1,123 @@
+'''建一個名為lon1的數組，大小為721*1440。其中，每一行的值與給定的lon相同。如右圖所示。'''
+import numpy as np
+np.set_printoptions(suppress=True)
+x = np.linspace(0,359.75,endpoint=True,num=1440)
+y = np.arange(721)
+x,y= np.meshgrid(x, y)
+print(x)
+np.save('lon.npy',x)
+
+
+'''建一個名為lat1的數組，大小為721*1440。其中，每一列的值與給定的lat相同。如右圖所示。'''
+import numpy as np
+y = np.linspace(90,-90,endpoint=True,num=721)
+# y = np.load("lat.npy")
+x = np.arange(1440)
+x,y= np.meshgrid(x, y)
+print(y)
+np.save("lat.npy",y)
+
+
+# '''找出t0中的最大值的位置index（提示：np.where()）和數據。
+# 例如右圖。實際答案的數值與右圖不同。'''
+import numpy as np
+t0 = np.load("t0.npy")
+max = np.max(t0)
+index = np.where(t0==np.max(t0))
+print(max)
+print(index)
+
+
+import numpy as np
+t0 = np.load("t0.npy")
+index = np.where(t0==np.max(t0))
+lon = np.load("lon.npy")
+print(lon[index[0],index[1]])
+lat = np.load("lat.npy")
+print(lat[index[0],index[1]])
+print("经纬度对应的地方是： 纳米比亚")
+
+
+'''u0和v0都是721*1440大小的數組。
+u0代表沿緯度的風大小，向東為正，即西風為正值。
+ v0代表沿經度的風大小，向北為正，即南風為正值。
+求總風wind0，總風=√(𝑢0^2+𝑣0^2 )
+'''
+import numpy as np
+u0 = np.load("u0.npy")
+v0 = np.load("v0.npy")
+win0 = np.sqrt(np.square(u0)+np.square(v0))
+np.save("wind0.npy",win0)
+print(win0)
+
+
+'''wind0>=15的地方，t0平均值是多少。
+10<=wind0<15的地方，t0平均值是多少。
+wind0<10的地方，t0平均值是多少。
+wind0<5的地方，t0平均值是多少。
+'''
+import  numpy as np
+win0 = np.load('wind0.npy')
+win1 = np.where(win0>=15)
+win2 = np.where(np.clip(win0,10,14.999999999999999))
+win3 = np.where(win0<10)
+win4 = np.where(win0<5)
+t0 = np.load('t0.npy')
+mean1 = t0[win1[0],win1[1]].mean()
+mean2 = t0[win2[0],win2[1]].mean()
+mean3 = t0[win3[0],win3[1]].mean()
+mean4 = t0[win4[0],win4[1]].mean()
+print(mean1,mean2,mean3,mean4)
+
+
+"""求lat1>20的地方的t0最大值、最小值和平均值。
+求lat1<-20的地方的t0最大值、最小值和平均值。"""
+import numpy as np
+lat1 = np.load("lat.npy")
+lat2 = np.where(lat1>20)
+lat3 = np.where(lat1<-20)
+t0 = np.load("t0.npy")
+mean1 = t0[lat2[0],lat2[1]].mean()#>20
+max1 = t0[lat2[0],lat2[1]].max()
+min1 = t0[lat2[0],lat2[1]].min()
+mean2 = t0[lat3[0],lat3[1]].mean()#<-20
+max2 = t0[lat3[0],lat3[1]].max()
+min2 = t0[lat3[0],lat3[1]].min()
+print(mean1,max1,min1,mean2,max2,min2)
+
+"""春秋"""
+
+
+'''z和w都是三維數組，4*720*1440。
+與t0, u0, v0相似，第1維大小為720，對應緯度。第2維大小為1440，對應經度。
+第0維大小為4，對應高度。
+z代表海拔，z除以9.80661可以得到以米m為單位的高度值deltaz。如10米、20米。
+求最上層和最下層的高度差，以米為單位。提示：z[0,…]-z[-1,…]
+'''
+import numpy as np
+z = np.load('z.npy')
+high = z/9.80661
+print(high[0,...]-high[-1,...])
+
+
+'''求w數組在第0維上，兩兩之間的差的絶對值abs。
+提示：
+兩兩之間的差 = w[:-1,…]-w[1:,…]
+abs最大值是多少？
+它所處的經緯度是多少？這個經緯度對應哪個地方？
+https://www.qvdv.com/tools/qvdv-coordinate.html
+'''
+import numpy as np
+
+w = np.load("w.npy")
+w1 = np.abs(w[:-1,...]-w[1:,...])
+print(np.max(w1))
+absw = np.where(w1 == np.max(w1))
+lat = np.load("lat.npy")
+lon = np.load("lon.npy")
+lat1 = lat[absw[1],absw[2]]
+lon1 = lon[absw[1],absw[2]]
+print(lon1,lat1)
+print("在北方的某一片海")
+
+
